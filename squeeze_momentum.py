@@ -40,15 +40,16 @@ class SqueezeMomentumIndicator:
             atr_length: ATR周期
             atr_mult: ATR止损倍数
         """
-        self.bb_length = bb_length
-        self.bb_mult = bb_mult
-        self.kc_length = kc_length
-        self.kc_mult = kc_mult
-        self.rsi_length = rsi_length
-        self.rsi_overbought = rsi_overbought
-        self.rsi_oversold = rsi_oversold
-        self.atr_length = atr_length
-        self.atr_mult = atr_mult
+        # 确保整数参数是整数类型
+        self.bb_length = int(bb_length)
+        self.bb_mult = float(bb_mult)
+        self.kc_length = int(kc_length)
+        self.kc_mult = float(kc_mult)
+        self.rsi_length = int(rsi_length)
+        self.rsi_overbought = float(rsi_overbought)
+        self.rsi_oversold = float(rsi_oversold)
+        self.atr_length = int(atr_length)
+        self.atr_mult = float(atr_mult)
 
     def calculate_bollinger_bands(self, data: pd.Series) -> Tuple[pd.Series, pd.Series, pd.Series]:
         """计算布林带"""

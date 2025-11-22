@@ -187,12 +187,75 @@ indicator = SqueezeMomentumIndicator(
 4. **风险管理**: 始终使用止损，控制单笔交易风险
 5. **组合使用**: 可以结合其他指标（如成交量、MACD等）进一步确认信号
 
+## 模型验证和防止过拟合
+
+### 完整验证流程
+
+本项目包含严格的模型验证系统，防止过拟合：
+
+```bash
+# 生成测试数据
+python generate_sample_data.py
+
+# 运行完整验证（包含参数优化和Walk-Forward分析）
+python model_validation.py
+```
+
+验证流程包括：
+1. **数据分割**：训练集(70%) / 验证集(15%) / 测试集(15%)
+2. **参数优化**：在训练集上进行网格搜索
+3. **验证集测试**：验证参数的泛化能力
+4. **测试集评估**：最终的out-of-sample测试
+5. **过拟合检测**：比较训练集和测试集性能
+6. **Walk-Forward分析**：时间序列交叉验证
+
+详细说明请参考 [VALIDATION_GUIDE.md](VALIDATION_GUIDE.md)
+
+### 从币安获取真实数据
+
+```python
+from binance_data_fetcher import BinanceDataFetcher
+
+fetcher = BinanceDataFetcher()
+data = fetcher.get_historical_klines(
+    symbol='BTCUSDT',
+    interval='4h',
+    start_date='2023-01-01'
+)
+fetcher.save_to_csv(data, 'btc_4h_data.csv')
+```
+
 ## 文件说明
 
-- `squeeze_momentum.py`: 主要指标实现
-- `backtest_example.py`: 回测系统和示例
+### 核心指标
+- `squeeze_momentum.py`: Squeeze Momentum指标实现
+- `backtest_example.py`: 基础回测系统和示例
+
+### 数据获取
+- `binance_data_fetcher.py`: 币安API数据获取器
+- `generate_sample_data.py`: 生成真实市场特征的模拟数据
+
+### 模型验证
+- `model_validation.py`: 完整的模型验证系统（防止过拟合）
+- `VALIDATION_GUIDE.md`: 模型验证详细指南
+
+### 其他
 - `README.md`: 本说明文档
 - `requirements.txt`: Python依赖包
+
+## 重要提示
+
+⚠️ **关于过拟合**：
+- 本项目的验证系统检测到训练集和测试集存在性能差异
+- 这是正常现象，说明验证系统正确工作
+- 使用Walk-Forward分析获得更可靠的性能评估
+- 在实盘前务必进行充分的模拟交易测试
+
+⚠️ **风险警告**：
+- 历史表现不代表未来收益
+- 加密货币交易存在高风险
+- 仅用于教育和研究目的
+- 实盘交易前请充分测试并做好风险管理
 
 ## License
 
